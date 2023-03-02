@@ -1,7 +1,14 @@
 import { StatusBar } from "expo-status-bar";
 import { FC, useState } from "react";
-import { Platform, SafeAreaView, StyleSheet, Text, View } from "react-native";
-import { BottomNavigation } from "react-native-paper";
+import {
+  Alert,
+  Platform,
+  SafeAreaView,
+  StyleSheet,
+  Text,
+  View,
+} from "react-native";
+import { Appbar, BottomNavigation } from "react-native-paper";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import AlbumsScreen from "./screens/Albums";
 import MusicScreen from "./screens/Music";
@@ -38,9 +45,24 @@ const App: FC = () => {
   return (
     <SafeAreaProvider>
       <SafeAreaView style={styles.container}>
-        <View style={styles.navbar}>
-          <Text style={styles.navbarBranding}>Branding</Text>
-        </View>
+        <Appbar.Header
+          statusBarHeight={0}
+          style={{
+            backgroundColor: COLORS.LIGHT,
+          }}
+        >
+          <Appbar.BackAction />
+          <Appbar.Content title="Branding" />
+          <View style={{ flex: 1 }} />
+          <Appbar.Action
+            icon="magnify"
+            onPress={() => {
+              Alert.prompt(
+                "While we develop this feature, let us know your favorite vegetable:"
+              );
+            }}
+          />
+        </Appbar.Header>
         <BottomNavigation
           navigationState={{ index, routes }}
           onIndexChange={setIndex}
