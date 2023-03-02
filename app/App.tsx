@@ -1,83 +1,77 @@
+import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import { NavigationContainer } from "@react-navigation/native";
 import { StatusBar } from "expo-status-bar";
-import { FC, useState } from "react";
-import {
-  Alert,
-  Platform,
-  SafeAreaView,
-  StyleSheet,
-  Text,
-  View,
-} from "react-native";
-import { Appbar, BottomNavigation } from "react-native-paper";
+import { FC } from "react";
+import { SafeAreaView, StyleSheet } from "react-native";
 import { SafeAreaProvider } from "react-native-safe-area-context";
+import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import AlbumsScreen from "./screens/Albums";
 import MusicScreen from "./screens/Music";
-import NotificationScreen from "./screens/Notifications";
-import RecentsScreen from "./screens/Recents";
+import { default as NotificationsScreen } from "./screens/Notifications";
 import { COLORS } from "./styles/theme";
 
+const Tab = createBottomTabNavigator();
+
 const App: FC = () => {
-  const [index, setIndex] = useState<number>(0);
   const routes = [
     {
-      key: "music",
-      title: "Favorites",
-      focusedIcon: "heart",
-      unfocusedIcon: "heart-outline",
+      name: "Music",
+      screen: MusicScreen,
+      icon: "music",
     },
-    { key: "albums", title: "Albums", focusedIcon: "album" },
-    { key: "recents", title: "Recents", focusedIcon: "history" },
     {
-      key: "notifications",
-      title: "Notifications",
-      focusedIcon: "bell",
-      unfocusedIcon: "bell-outline",
+      name: "Albums",
+      screen: AlbumsScreen,
+      icon: "album",
+    },
+    {
+      name: "Notifications",
+      screen: NotificationsScreen,
+      icon: "bell",
     },
   ];
 
-  const renderScene = BottomNavigation.SceneMap({
-    music: MusicScreen,
-    albums: AlbumsScreen,
-    recents: RecentsScreen,
-    notifications: NotificationScreen,
-  });
-
   return (
-    <SafeAreaProvider>
-      <SafeAreaView style={styles.container}>
-        <Appbar.Header
-          statusBarHeight={0}
-          style={{
-            backgroundColor: COLORS.LIGHT,
-          }}
-        >
-          <Appbar.BackAction />
-          <Appbar.Content title="Branding" />
-          <View style={{ flex: 1 }} />
-          <Appbar.Action
-            icon="magnify"
-            onPress={() => {
-              Alert.prompt(
-                "While we develop this feature, let us know your favorite vegetable:"
-              );
+    <NavigationContainer>
+      <SafeAreaProvider>
+        <SafeAreaView style={styles.container}>
+          <StatusBar style="auto" />
+          <Tab.Navigator
+            initialRouteName="Music"
+            screenOptions={{
+              tabBarActiveTintColor: COLORS.DARK,
+              tabBarInactiveTintColor: COLORS.MID,
+              tabBarActiveBackgroundColor: COLORS.LIGHT,
+              tabBarInactiveBackgroundColor: COLORS.LIGHT,
+              headerStyle: {
+                backgroundColor: COLORS.LIGHT,
+              },
+              headerTintColor: COLORS.DARK,
             }}
-          />
-        </Appbar.Header>
-        <BottomNavigation
-          navigationState={{ index, routes }}
-          onIndexChange={setIndex}
-          renderScene={renderScene}
-          theme={{
-            colors: {
-              background: COLORS.DARK,
-              secondaryContainer: COLORS.DARK,
-            },
-          }}
-          barStyle={{ backgroundColor: COLORS.LIGHT }}
-        />
-        <StatusBar style="auto" />
-      </SafeAreaView>
-    </SafeAreaProvider>
+            sceneContainerStyle={{ backgroundColor: COLORS.DARK }}
+          >
+            {routes.map(({ name, screen, icon }) => (
+              <Tab.Screen
+                name={name}
+                component={screen}
+                options={{
+                  tabBarIcon: ({ color, size }) => (
+                    <MaterialCommunityIcons
+                      name={icon}
+                      size={size}
+                      color={color}
+                    />
+                  ),
+                  tabBarLabelStyle: {
+                    fontSize: 14,
+                  },
+                }}
+              />
+            ))}
+          </Tab.Navigator>
+        </SafeAreaView>
+      </SafeAreaProvider>
+    </NavigationContainer>
   );
 };
 
@@ -89,7 +83,6 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.DARK,
     flexDirection: "column",
     justifyContent: "flex-start",
-    paddingTop: Platform.OS === "android" ? 24 : "auto",
   },
   navbar: {
     top: 0,

@@ -1,7 +1,7 @@
 import { StyleSheet, Text, View } from "react-native";
 import { COLORS } from "../../styles/theme";
 
-const NotificationScreen = () => {
+const NotificationsScreen = () => {
   return (
     <View style={styles.main}>
       <Text style={styles.text}>Notification</Text>
@@ -18,4 +18,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default NotificationScreen;
+export default NotificationsScreen;
