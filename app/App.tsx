@@ -52,6 +52,7 @@ const App: FC = () => {
           >
             {routes.map(({ name, screen, icon }) => (
               <Tab.Screen
+                key={name}
                 name={name}
                 component={screen}
                 options={{
